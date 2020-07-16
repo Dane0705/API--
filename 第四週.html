@@ -1,0 +1,80 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css"
+    integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
+
+  <style>
+    html,
+    body {
+      height: 100vh;
+      text-align: center;
+    }
+    #app{
+      width: 600px;
+      margin:150px auto;
+    }
+  </style>
+</head>
+<body>
+  <div id="app">
+      <div class="container">
+        <form class="form-signin" @submit.prevent="signin">
+          <h1 class="h3 mb-3 font-weight-normal mb-5">
+            請先登入
+          </h1>
+          <div class="form-group mt-5">
+            <label for="inputEmail" class="sr-only">Email address</label>
+            <input id="inputEmail" v-model="user.email" type="email" class="form-control" placeholder="Email address"
+              required autofocus>
+          </div>
+          <div class="form-group">
+            <label for="inputPassword" class="sr-only">Password</label>
+            <input id="inputPassword" v-model="user.password" type="password" class="form-control"
+              placeholder="Password" required>
+          </div>
+          <button class="btn btn-lg btn-primary btn-block" type="submit">
+            登入
+          </button>
+        </form>
+      </div>
+    </div>
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+
+  <script>
+    const uuid = '0a1f117e-2652-4849-b6b5-1d4985eb2439';
+    const apiPath = 'https://course-ec-api.hexschool.io/api/';
+    let app = new Vue({
+      el : '#app',
+      data:{
+        user:{
+          email:'',
+          password:''
+        },
+        token:'',
+        products:[]
+      },
+      methods:{
+        signin(){
+          const api = `${apiPath}auth/login`;
+          axios.post(api,this.user).then((res)=>{
+            console.log(res);
+            const logintoken = res.data.token;
+            const expired = res.data.expired;
+            document.cookie = `Logintoken=${logintoken}; expires=${new Date(expired * 1000)}; path=/`;
+            window.location = '第三週.html'
+          }).catch((res)=>{
+            alert('登入失敗')
+          })
+        },
+      }
+    })
+
+  </script>
+</body>
+</html>
